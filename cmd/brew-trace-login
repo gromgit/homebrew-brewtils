@@ -20,10 +20,11 @@ done
 HOMEBREW_SHELL_NAME="$(/bin/ps -p "${PPID}" -c -o comm=)"
 case "${HOMEBREW_SHELL_NAME}" in
   bash|-bash)
-    PS4='+${BASH_SOURCE}:${LINENO}[$?]> ' bash -xli </dev/null
+    # shellcheck disable=SC2016
+    env -i PS4='+${BASH_SOURCE}:${LINENO}[$?]> ' bash -xli </dev/null
   ;;
   zsh|-zsh)
-    zsh -xlis </dev/null
+    env -i zsh -xlis </dev/null
   ;;
   *)
     fatal "Unable to support shell '${HOMEBREW_SHELL_NAME}'"
