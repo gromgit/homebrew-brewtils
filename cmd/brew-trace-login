@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#:`brew trace-login` [options] [-- grep_args]
+#:    Trace the shell startup sequence, optionally grepping with *grep_args*
+#:    `-f` | `--logfile` *file* : Log startup to *file* (default: `/tmp/trace.log`)
+# shellcheck source=../lib/funcs.sh
+. "$(dirname "$0")/../lib/funcs.sh"
+
+logfile=/tmp/trace.log
+
+while true; do
+  case "$1" in
+    -f|--logfile) logfile=$2; shift;;
+    --) shift; break;;
+    -*) fatal "Unrecognized option '$1'";;
+    *) break;;
+  esac
+  shift
+done
+
+HOMEBREW_SHELL_NAME="$(/bin/ps -p "${PPID}" -c -o comm=)"
+case "${HOMEBREW_SHELL_NAME}" in
+  bash|-bash)
+    PS4='+${BASH_SOURCE}:${LINENO}[$?]> ' bash -xli </dev/null
+  ;;
+  zsh|-zsh)
+    zsh -xlis </dev/null
+  ;;
+  *)
+    fatal "Unable to support shell '${HOMEBREW_SHELL_NAME}'"
+  ;;
+esac |&
+if [[ $# -gt 0 ]]; then
+  tee "${logfile}" | grep "$@"
+else
+  tee "${logfile}"
+fi
+info "${HOMEBREW_SHELL_NAME#-} trace log in ${logfile}"

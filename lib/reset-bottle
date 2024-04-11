@@ -1,0 +1,17 @@
+#!/usr/bin/awk -f
+BEGIN	{ bottle = 0 }
+/^  bottle do/	{
+			bottle = 1; print "  bottle do"
+			contents = ""
+			if (OS != "" && SHA != "") {
+				contents = contents "    sha256 " OS ": \"" SHA "\""
+			}
+			if (COMMENT != "") {
+				contents = contents " # " COMMENT
+			}
+			if (contents != "") {
+				print contents
+			}
+                }
+/^  end/	{ bottle = 0 }
+	{ if (!bottle) { print } }

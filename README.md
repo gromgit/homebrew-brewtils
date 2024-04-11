@@ -1,11 +1,11 @@
-# Gromgit Brewtils
+# gromgit's Homebrew Utilities
 
-## How do I install these formulae?
+## The Commands
 
-`brew install gromgit/brewtils/<formula>`
+* `trace-login`: traces your shell login (bash and zsh supported), often to answer one of the following questions:-
+  * Where did I put that `eval "$(.../brew shellenv)"` line?
+  * The Homebrew `bin` directories were in my `PATH`, but now they're not. What happened? (Spoiler: It's usually something that resets `PATH` after you set it correctly.)
 
-Or `brew tap gromgit/brewtils` and then `brew install <formula>`.
+## How do I use these commands?
 
-## Documentation
-
-`brew help`, `man brew` or check [Homebrew's documentation](https://docs.brew.sh).
+`brew tap gromgit/brewtils` and then `brew <cmd>...`
