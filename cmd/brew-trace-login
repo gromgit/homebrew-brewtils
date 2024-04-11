@@ -18,13 +18,14 @@ while true; do
 done
 
 HOMEBREW_SHELL_NAME="$(/bin/ps -p "${PPID}" -c -o comm=)"
+envcmd=(env -i HOME="${HOME}")
 case "${HOMEBREW_SHELL_NAME}" in
   bash|-bash)
     # shellcheck disable=SC2016
-    env -i PS4='+${BASH_SOURCE}:${LINENO}[$?]> ' bash -xli </dev/null
+    "${envcmd[@]}" PS4='+${BASH_SOURCE}:${LINENO}[$?]> ' bash -xli </dev/null
   ;;
   zsh|-zsh)
-    env -i zsh -xlis </dev/null
+    "${envcmd[@]}" zsh -xlis </dev/null
   ;;
   *)
     fatal "Unable to support shell '${HOMEBREW_SHELL_NAME}'"
