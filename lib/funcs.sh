@@ -3,7 +3,8 @@ HOMEBREW_TEMP=${HOMEBREW_TEMP:-/tmp}
 [[ $(uname -s || true) == "Darwin" ]] && GNU_PREFIX=g
 # string formatters
 # Ref: console_codes(4) man page
-if [[ -t 1 ]]; then
+if [[ -t 1 ]]
+then
   # Csi_escape <param> - ECMA-48 CSI sequence
   Csi_escape() { printf "\033[%s" "$1"; }
 else
@@ -44,7 +45,12 @@ export XDG_CACHE_HOME="${XDG_CACHE_HOME:-${HOME}/.cache}"
 # fatal: Report fatal error
 # USAGE: fatal <msg> ...
 fatal() {
-  local opts=(); while [[ $1 == "-"* ]]; do opts+=("$1"); shift; done
+  local opts=()
+  while [[ $1 == "-"* ]]
+  do
+    opts+=("$1")
+    shift
+  done
   # shellcheck disable=SC2154 # msg_prefix is set externally
   echo "${opts[@]}" "${Tty_red}${msg_prefix}FATAL ERROR:${Tty_reset} $*" >&2
   exit 1
@@ -53,21 +59,36 @@ fatal() {
 # error: Report error
 # USAGE: error <msg> ...
 error() {
-  local opts=(); while [[ $1 == "-"* ]]; do opts+=("$1"); shift; done
+  local opts=()
+  while [[ $1 == "-"* ]]
+  do
+    opts+=("$1")
+    shift
+  done
   echo "${opts[@]}" "${Tty_red}${msg_prefix}ERROR:${Tty_reset} $*" >&2
 }
 
 # warn: Report warning
 # USAGE: warn <msg> ...
 warn() {
-  local opts=(); while [[ $1 == "-"* ]]; do opts+=("$1"); shift; done
+  local opts=()
+  while [[ $1 == "-"* ]]
+  do
+    opts+=("$1")
+    shift
+  done
   echo "${opts[@]}" "${Tty_blue}${msg_prefix}Warning:${Tty_reset} $*" >&2
 }
 
 # info: Informational message
 # USAGE: info <msg> ...
 info() {
-  local opts=(); while [[ $1 == "-"* ]]; do opts+=("$1"); shift; done
+  local opts=()
+  while [[ $1 == "-"* ]]
+  do
+    opts+=("$1")
+    shift
+  done
   echo "${opts[@]}" "${Tty_green}${msg_prefix}Info:${Tty_reset} $*" >&2
 }
 
@@ -76,10 +97,12 @@ info() {
 need_progs() {
   local missing=()
   local i
-  for i in "$@"; do
+  for i in "$@"
+  do
     type -P "${i}" &>/dev/null || missing+=("${i}")
   done
-  if [[ ${#missing[@]} -gt 0 ]]; then
+  if [[ ${#missing[@]} -gt 0 ]]
+  then
     fatal "Commands missing: ${missing[*]}"
   fi
 }
@@ -95,7 +118,8 @@ dedup_list() {
 # USAGE: deurlify <str> ...
 deurlify() {
   local s
-  for s in "$@"; do
+  for s in "$@"
+  do
     s=${s//%21/\!}
     s=${s//%23/\#}
     s=${s//%24/\$}
@@ -151,11 +175,14 @@ declare -A max_xcode_versions=(
 # Generate integer version number
 # USAGE: int_ver X.Y...
 int_ver() {
-  if [[ $1 =~ ([0-9]+)\.([0-9]+)\.([0-9]+) ]]; then
+  if [[ $1 =~ ([0-9]+)\.([0-9]+)\.([0-9]+) ]]
+  then
     printf '%d%02d%02d' "${BASH_REMATCH[1]##0}" "${BASH_REMATCH[2]##0}" "${BASH_REMATCH[3]##0}"
-  elif [[ $1 =~ ([0-9]+)\.([0-9]+) ]]; then
+  elif [[ $1 =~ ([0-9]+)\.([0-9]+) ]]
+  then
     printf '%d%02d00' "${BASH_REMATCH[1]##0}" "${BASH_REMATCH[2]##0}"
-  elif [[ $1 =~ ([0-9]+) ]]; then
+  elif [[ $1 =~ ([0-9]+) ]]
+  then
     printf '%d0000' "${BASH_REMATCH[1]##0}"
   fi
 }
@@ -176,24 +203,24 @@ os_name() {
   case "$(uname -s)" in
     Darwin)
       case "$(sw_vers -productVersion)" in
-        14.*) echo "sonoma";;
-        13.*) echo "ventura";;
-        12.*) echo "monterey";;
-        11.*) echo "big_sur";;
-        10.15.*) echo "catalina";;
-        10.14.*) echo "mojave";;
-        10.13.*) echo "high_sierra";;
-        10.12.*) echo "sierra";;
-        10.11.*) echo "el_capitan";;
-        *) fatal "Your macOS is too old to support Homebrew"
+        14.*) echo "sonoma" ;;
+        13.*) echo "ventura" ;;
+        12.*) echo "monterey" ;;
+        11.*) echo "big_sur" ;;
+        10.15.*) echo "catalina" ;;
+        10.14.*) echo "mojave" ;;
+        10.13.*) echo "high_sierra" ;;
+        10.12.*) echo "sierra" ;;
+        10.11.*) echo "el_capitan" ;;
+        *) fatal "Your macOS is too old to support Homebrew" ;;
       esac
-    ;;
+      ;;
     Linux)
       echo "$(uname -m || true)_linux"
-    ;;
+      ;;
     *)
       fatal "Homebrew only supported on macOS and Linux"
-    ;;
+      ;;
   esac
 }
 
@@ -201,13 +228,15 @@ my_os=$(os_name)
 my_os_sha256=$(os_name | shasum -a 256 | awk '{print $1}' || true)
 my_ver=$(os_ver "${my_os}")
 my_xcode_ver=$(max_xcode_ver "${my_os}")
-if [[ -z ${HOMEBREW_LOGS} ]]; then
+if [[ -z ${HOMEBREW_LOGS} ]]
+then
   case "$(uname -s)" in
-    Darwin) dir=${HOME}/Library/Logs/Homebrew;;
-    Linux) for dir in ${XDG_CACHE_HOME}/Homebrew/Logs ${HOME}/.cache/Homebrew/Logs; do [[ -d ${dir} ]] && break; done;;
-    *) fatal "Unable to support '$(uname -s || true)'";;
+    Darwin) dir=${HOME}/Library/Logs/Homebrew ;;
+    Linux) for dir in ${XDG_CACHE_HOME}/Homebrew/Logs ${HOME}/.cache/Homebrew/Logs; do [[ -d ${dir} ]] && break; done ;;
+    *) fatal "Unable to support '$(uname -s || true)'" ;;
   esac
-  if [[ -d ${dir} ]]; then
+  if [[ -d ${dir} ]]
+  then
     export HOMEBREW_LOGS=${dir}
   else
     fatal "Log directory '${dir}' not found"
@@ -221,11 +250,13 @@ shopt -s lastpipe extglob
 
 # formula_names <formula_spec>...
 formula_names() {
-  local i; for i in "$@"; do
+  local i
+  for i in "$@"
+  do
     case "${i}" in
-      *Formula/*.rb) if [[ ${i} =~ .*Formula/(.*)\.rb ]]; then echo "${BASH_REMATCH[1]}"; fi;;
-      \@new) git status -s | grep -E '^\?\? Formula/' | sed 's!.*/\(.*\)\.rb!\1!' || true;;
-      *) [[ -s Formula/${i}.rb ]] && echo "${i}";;
+      *Formula/*.rb) if [[ ${i} =~ .*Formula/(.*)\.rb ]]; then echo "${BASH_REMATCH[1]}"; fi ;;
+      \@new) git status -s | grep -E '^\?\? Formula/' | sed 's!.*/\(.*\)\.rb!\1!' || true ;;
+      *) [[ -s Formula/${i}.rb ]] && echo "${i}" ;;
     esac
   done
 }
@@ -234,13 +265,15 @@ formula_names() {
 formula_path() {
   need_progs "${GNU_PREFIX}realpath"
   local fpath
-  if [[ -e Aliases/$1 ]]; then
+  if [[ -e Aliases/$1 ]]
+  then
     # Check for alias
     fpath=$("${GNU_PREFIX}realpath" --relative-base="${repo}" -e Aliases/"$1" 2>/dev/null)
   else
     fpath=Formula/${1}.rb
   fi
-  if [[ -s ${fpath} ]]; then
+  if [[ -s ${fpath} ]]
+  then
     echo "${fpath}"
   else
     error "formula_path: $1 not found"
@@ -250,7 +283,11 @@ formula_path() {
 
 # can_build <formula.rb>
 can_build() {
-  [[ -f $1 ]] || { warn "can_build: $1 not a file"; b_cache+=(["${name}"]=1); return 1; }
+  [[ -f $1 ]] || {
+    warn "can_build: $1 not a file"
+    b_cache+=(["${name}"]=1)
+    return 1
+  }
   local drop f1 f2 name
   local metajson=${repo}/.meta/formula.json
   name=$(basename "$1" .rb)
@@ -261,14 +298,17 @@ can_build() {
   # First check for explicit block
   grep -E "^${name}"$'\t' "${repo}/.settings/blocked" 2>/dev/null | while read -r _ drop; do
     warn "Skipping ${name} because ${drop}"
-    b_cache+=(["${name}"]=1); return 1
+    b_cache+=(["${name}"]=1)
+    return 1
   done || true
 
   # Then check for disabled!
   grep 'disable!' "$1" | while read -r _ f1 f2 _; do
-    if [[ ${f1} == "date:" && ${f2//[\",]} < $(date +%Y-%m-d || true) ]]; then
+    if [[ ${f1} == "date:" && ${f2//[\",]/} < $(date +%Y-%m-d || true) ]]
+    then
       warn "Skipping ${name} because :disabled"
-      b_cache+=(["${name}"]=1); return 1
+      b_cache+=(["${name}"]=1)
+      return 1
     fi
   done || true
 
@@ -278,47 +318,62 @@ can_build() {
     Darwin)
 
       os_dep=$(jq '.[]|select(.name=="'"${name}"'" and .requirements[].name=="linux")' "${metajson}")
-      if [[ -n ${os_dep} ]]; then
+      if [[ -n ${os_dep} ]]
+      then
         warn "Skipping ${name} because depends_on :linux"
-        b_cache+=(["${name}"]=1); return 1
+        b_cache+=(["${name}"]=1)
+        return 1
       fi
 
-      local min_os; min_os=$(grep "depends_on macos: :" "$1" 2>/dev/null)
-      if [[ ${min_os} =~ .*macos:\ :([^ ]*) && $(os_ver "${BASH_REMATCH[1]}" || true) -gt ${my_ver} ]]; then
+      local min_os
+      min_os=$(grep "depends_on macos: :" "$1" 2>/dev/null)
+      if [[ ${min_os} =~ .*macos:\ :([^ ]*) && $(os_ver "${BASH_REMATCH[1]}" || true) -gt ${my_ver} ]]
+      then
         warn "Skipping ${name} because ${BASH_REMATCH[0]}"
-        b_cache+=(["${name}"]=1); return 1
+        b_cache+=(["${name}"]=1)
+        return 1
       fi
 
-      local min_xcode; min_xcode=$(grep "depends_on xcode:" "$1" 2>/dev/null)
-      if [[ ${min_xcode} =~ .*xcode:\ [^\"]*\"([^\"]+)\".* && $(int_ver "${BASH_REMATCH[1]}" || true) -gt ${my_xcode_ver} ]]; then
+      local min_xcode
+      min_xcode=$(grep "depends_on xcode:" "$1" 2>/dev/null)
+      if [[ ${min_xcode} =~ .*xcode:\ [^\"]*\"([^\"]+)\".* && $(int_ver "${BASH_REMATCH[1]}" || true) -gt ${my_xcode_ver} ]]
+      then
         warn "Skipping ${name} because ${BASH_REMATCH[0]}"
-        b_cache+=(["${name}"]=1); return 1
+        b_cache+=(["${name}"]=1)
+        return 1
       fi
 
-    ;;
+      ;;
     Linux)
       os_dep=$(jq 'map(select(.name=="'"${name}"'"))|.[].requirements[]|select(.name=="macos" and .version==null)' "${metajson}")
-      if [[ -n ${os_dep} ]]; then
+      if [[ -n ${os_dep} ]]
+      then
         warn "Skipping ${name} because depends_on :macos"
-        b_cache+=(["${name}"]=1); return 1
+        b_cache+=(["${name}"]=1)
+        return 1
       fi
-    ;;
+      ;;
     *)
       warn "Skipping ${name} because unknown OS"
-      b_cache+=(["${name}"]=1); return 1
-    ;;
+      b_cache+=(["${name}"]=1)
+      return 1
+      ;;
   esac
 
   # Then see if it's dependency-blocked
   # shellcheck disable=SC2154
-  for drop in "${block_depends[@]}"; do
-    if grep -Eq "depends_on ${drop}" "$1"; then
+  for drop in "${block_depends[@]}"
+  do
+    if grep -Eq "depends_on ${drop}" "$1"
+    then
       warn "Skipping ${name} because ${drop}"
-      b_cache+=(["${name}"]=1); return 1
+      b_cache+=(["${name}"]=1)
+      return 1
     fi
   done
 
-  b_cache+=(["${name}"]=0); return 0
+  b_cache+=(["${name}"]=0)
+  return 0
 }
 
 # cmd: Show command being run
@@ -332,12 +387,14 @@ cmd() {
 needs_rebottling() {
   # If no ${my_os}: or all: bottle spec...
   ! grep -Eq "sha256 .*(${my_os}|all):" "$@" ||
-  # or it has a fake ${my_os} spec
-  grep -Eq "sha256 .*${my_os}:.*\"${my_os_sha256}\"" "$@"
+    # or it has a fake ${my_os} spec
+    grep -Eq "sha256 .*${my_os}:.*\"${my_os_sha256}\"" "$@"
 }
 
 list_rebottling() {
-  local f; for f in "$@"; do
+  local f
+  for f in "$@"
+  do
     needs_rebottling "${f}" && echo "${f}"
   done
 }
@@ -351,9 +408,10 @@ remove_bottle_filter() {
 # remove_bottle_block: Remove bottle block from formulae
 remove_bottle_block() {
   local f
-  for f in "$@"; do
+  for f in "$@"
+  do
     info "Debottling ${f}"
-    remove_bottle_filter < "${f}" > "${HOMEBREW_TEMP}"/temp.rb && mv "${HOMEBREW_TEMP}"/temp.rb "${f}"
+    remove_bottle_filter <"${f}" >"${HOMEBREW_TEMP}"/temp.rb && mv "${HOMEBREW_TEMP}"/temp.rb "${f}"
   done
 }
 
@@ -366,10 +424,11 @@ fake_bottle_filter() {
 # fake_bottle_block: Reset bottle block to fake one
 fake_bottle_block() {
   local f
-  for f in "$@"; do
+  for f in "$@"
+  do
     [[ -s ${f} ]] || continue
     info "Fake-bottling ${f}"
-    fake_bottle_filter < "${f}" > "${HOMEBREW_TEMP}"/temp.rb && mv "${HOMEBREW_TEMP}"/temp.rb "${f}"
+    fake_bottle_filter <"${f}" >"${HOMEBREW_TEMP}"/temp.rb && mv "${HOMEBREW_TEMP}"/temp.rb "${f}"
   done
 }
 
@@ -378,15 +437,18 @@ fake_bottle_block() {
 cmd_retry() {
   need_progs timelimit
   local tries=5
-  while true; do
+  while true
+  do
     case "$1" in
-      --tries=*) tries=${1#*=};;
-      *) break;
+      --tries=*) tries=${1#*=} ;;
+      *) break ;;
     esac
     shift
   done
-  while [[ $((--tries)) -ge 0 ]]; do
-    if cmd timelimit -t 120 "$@"; then
+  while [[ $((--tries)) -ge 0 ]]
+  do
+    if cmd timelimit -t 120 "$@"
+    then
       return 0
     else
       warn "Command failed, ${tries} tries left."
@@ -398,7 +460,8 @@ cmd_retry() {
 # git_in: Run Git command in repo
 # USAGE: git_in <repo> <cmd> ...
 git_in() {
-  local repo=$1; shift
+  local repo=$1
+  shift
   pushd "${repo}" >/dev/null || fatal "Can't cd to '${repo}'"
   cmd_retry git "$@"
   popd >/dev/null || fatal "Can't popd"
@@ -406,13 +469,17 @@ git_in() {
 
 # faketty: Run command with fake tty (optional logging)
 # USAGE: faketty [-f <log_file>] <cmd> ...
-faketty () {
+faketty() {
   # Create a temporary file for storing the status code
   local logfile=/dev/null tmp cmd err
-  while true; do
+  while true
+  do
     case "$1" in
-      -f) logfile=$2; shift;;
-      *) break;;
+      -f)
+        logfile=$2
+        shift
+        ;;
+      *) break ;;
     esac
     shift
   done
@@ -427,7 +494,8 @@ faketty () {
   cmd="$(printf '%q ' "$@")"'; echo $? > '"${tmp}"
 
   # Run the script through /bin/sh with fake tty
-  if [[ $(uname || true) == "Darwin" ]]; then
+  if [[ $(uname || true) == "Darwin" ]]
+  then
     # MacOS
     SHELL=/bin/sh script -qF "${logfile}" /bin/sh -c "${cmd}"
   else
@@ -451,9 +519,13 @@ faketty () {
 # append_unique: Append elements to array if they don't already exist
 # USAGE: append_unique <array_name> <element>...
 append_unique() {
-  local -n a=$1; shift
-  local i n; for i in "$@"; do
-    for n in "${a[@]}"; do
+  local -n a=$1
+  shift
+  local i n
+  for i in "$@"
+  do
+    for n in "${a[@]}"
+    do
       [[ ${n} == "${i}" ]] && return 0
     done
     a+=("${i}")
@@ -469,7 +541,8 @@ funcs_dir=$(dirname "$(realpath "${BASH_SOURCE[0]}")" || true)
 
 export HOMEBREW_CACHE=${HOMEBREW_CACHE:-$(readlink "$(brew --cache)")}
 
-for myvar in GITHUB_API_TOKEN GITHUB_PACKAGES_TOKEN GITHUB_PACKAGES_USER GITHUB_UPSTREAM GIT_EMAIL GIT_NAME GH_TOKEN; do
+for myvar in GITHUB_API_TOKEN GITHUB_PACKAGES_TOKEN GITHUB_PACKAGES_USER GITHUB_UPSTREAM GIT_EMAIL GIT_NAME GH_TOKEN
+do
   mynewvar=HOMEBREW_${myvar}
   [[ -n ${!mynewvar} ]] && export "${myvar}=${!mynewvar}"
 done
@@ -478,14 +551,14 @@ unset myvar mynewvar
 # Run this script to get the necessary source instructions
 # Ref: https://stackoverflow.com/a/28776166
 (return 0 2>/dev/null) || {
-#U USAGE: $0 [`-sh` [<script>]]
-#U   Development standard bash library (when sourced)
-#U   Output library `source` instructions (when run)
-#U   `-sh` = Add bash shebang to instructions
-#U   <script> = Write shebang to <script> and make it executable
+  #U USAGE: $0 [`-sh` [<script>]]
+  #U   Development standard bash library (when sourced)
+  #U   Output library `source` instructions (when run)
+  #U   `-sh` = Add bash shebang to instructions
+  #U   <script> = Write shebang to <script> and make it executable
   src_lib=../lib/funcs.sh
   case "$1" in
-    -h|--help) usage 0;;
+    -h | --help) usage 0 ;;
     -sh)
       [[ -n $2 ]] && {
         touch "$2" || fatal "unable to create '$2'"
@@ -493,7 +566,7 @@ unset myvar mynewvar
         exec >"$2"
       }
       echo "#!/usr/bin/env bash"
-    ;;
+      ;;
     *) : ;;
   esac
   cat <<EOS
