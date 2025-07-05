@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+HOMEBREW_TEMP=${HOMEBREW_TEMP:-/tmp}
 [[ $(uname -s || true) == "Darwin" ]] && GNU_PREFIX=g
 # string formatters
 # Ref: console_codes(4) man page
@@ -204,7 +205,7 @@ if [[ -z ${HOMEBREW_LOGS} ]]; then
   case "$(uname -s)" in
     Darwin) dir=${HOME}/Library/Logs/Homebrew;;
     Linux) for dir in ${XDG_CACHE_HOME}/Homebrew/Logs ${HOME}/.cache/Homebrew/Logs; do [[ -d ${dir} ]] && break; done;;
-    *) fatal "Unable to support '$(uname -s)'";;
+    *) fatal "Unable to support '$(uname -s || true)'";;
   esac
   if [[ -d ${dir} ]]; then
     export HOMEBREW_LOGS=${dir}
@@ -223,7 +224,7 @@ formula_names() {
   local i; for i in "$@"; do
     case "${i}" in
       *Formula/*.rb) if [[ ${i} =~ .*Formula/(.*)\.rb ]]; then echo "${BASH_REMATCH[1]}"; fi;;
-      \@new) git status -s | grep -E '^\?\? Formula/' | sed 's!.*/\(.*\)\.rb!\1!';;
+      \@new) git status -s | grep -E '^\?\? Formula/' | sed 's!.*/\(.*\)\.rb!\1!' || true;;
       *) [[ -s Formula/${i}.rb ]] && echo "${i}";;
     esac
   done
@@ -261,15 +262,15 @@ can_build() {
   grep -E "^${name}"$'\t' "${repo}/.settings/blocked" 2>/dev/null | while read -r _ drop; do
     warn "Skipping ${name} because ${drop}"
     b_cache+=(["${name}"]=1); return 1
-  done
+  done || true
 
   # Then check for disabled!
   grep 'disable!' "$1" | while read -r _ f1 f2 _; do
-    if [[ ${f1} == "date:" && ${f2//[\",]} < $(date +%Y-%m-d) ]]; then
+    if [[ ${f1} == "date:" && ${f2//[\",]} < $(date +%Y-%m-d || true) ]]; then
       warn "Skipping ${name} because :disabled"
       b_cache+=(["${name}"]=1); return 1
     fi
-  done
+  done || true
 
   # Then check for OS building
   local os_dep
@@ -283,13 +284,13 @@ can_build() {
       fi
 
       local min_os; min_os=$(grep "depends_on macos: :" "$1" 2>/dev/null)
-      if [[ ${min_os} =~ .*macos:\ :([^ ]*) && $(os_ver "${BASH_REMATCH[1]}") -gt ${my_ver} ]]; then
+      if [[ ${min_os} =~ .*macos:\ :([^ ]*) && $(os_ver "${BASH_REMATCH[1]}" || true) -gt ${my_ver} ]]; then
         warn "Skipping ${name} because ${BASH_REMATCH[0]}"
         b_cache+=(["${name}"]=1); return 1
       fi
 
       local min_xcode; min_xcode=$(grep "depends_on xcode:" "$1" 2>/dev/null)
-      if [[ ${min_xcode} =~ .*xcode:\ [^\"]*\"([^\"]+)\".* && $(int_ver "${BASH_REMATCH[1]}") -gt ${my_xcode_ver} ]]; then
+      if [[ ${min_xcode} =~ .*xcode:\ [^\"]*\"([^\"]+)\".* && $(int_ver "${BASH_REMATCH[1]}" || true) -gt ${my_xcode_ver} ]]; then
         warn "Skipping ${name} because ${BASH_REMATCH[0]}"
         b_cache+=(["${name}"]=1); return 1
       fi
@@ -344,7 +345,7 @@ list_rebottling() {
 # remove_bottle_filter: Drop bottle block from stdin
 remove_bottle_filter() {
   need_progs "${GNU_PREFIX}sed" "${GNU_PREFIX}cat"
-  "${GNU_PREFIX}sed" '/^  bottle do/,/^  end/d' | "${GNU_PREFIX}cat" -s
+  "${GNU_PREFIX}sed" '/^  bottle do/,/^  end/d' | "${GNU_PREFIX}cat" -s || true
 }
 
 # remove_bottle_block: Remove bottle block from formulae
@@ -426,7 +427,7 @@ faketty () {
   cmd="$(printf '%q ' "$@")"'; echo $? > '"${tmp}"
 
   # Run the script through /bin/sh with fake tty
-  if [[ $(uname) == "Darwin" ]]; then
+  if [[ $(uname || true) == "Darwin" ]]; then
     # MacOS
     SHELL=/bin/sh script -qF "${logfile}" /bin/sh -c "${cmd}"
   else
@@ -462,9 +463,9 @@ append_unique() {
 need_progs git
 
 # Derive some important vars
-cache_root=$(dirname "$(realpath "$(brew --cache)")")
+cache_root=$(dirname "$(realpath "$(brew --cache || true)")" || true)
 export cache_root
-funcs_dir=$(dirname "$(realpath "${BASH_SOURCE[0]}")")
+funcs_dir=$(dirname "$(realpath "${BASH_SOURCE[0]}")" || true)
 
 export HOMEBREW_CACHE=${HOMEBREW_CACHE:-$(readlink "$(brew --cache)")}
 
