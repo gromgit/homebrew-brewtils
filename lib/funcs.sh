@@ -496,9 +496,9 @@ unset myvar mynewvar
     ;;
     *) : ;;
   esac
-  cat <<-EOF
-	# Load development standard shell library
-	# shellcheck source=${src_lib}
-	. "\$(dirname "\$0")/${src_lib}"
-	EOF
+  cat <<EOS
+# Load development standard shell library
+# shellcheck source=${src_lib}
+. "\$(dirname "\$0")/${src_lib}"
+EOS
 }
