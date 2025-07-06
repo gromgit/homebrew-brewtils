@@ -21,6 +21,7 @@ class Taproom < Formula
   test do
     input, = Open3.popen2 "script -q output.txt"
     input.puts "stty rows 80 cols 130"
+    input.puts "export TERM=vt100"
     input.puts bin/"taproom"
     sleep 5
     input.puts "q"
