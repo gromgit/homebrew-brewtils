@@ -7,9 +7,9 @@ class Taproom < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/gromgit/brewtils"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma: "2717805a6da919a6935dddd4e743349c52eeed6b8ea280ede4b0f959cbda5f53"
-    sha256 cellar: :any_skip_relocation, ventura:      "b53f57d353c0998dc90378420340e1f8d97d539c84a23c0f83813836928dae4b"
-    sha256 cellar: :any_skip_relocation, x86_64_linux: "567d50815117937fc9980879d245728e1bbd67e421a78eff06994914e3e0cda7"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma: "1ed3368bd55fae0029e50c8703eca603ef47c289ec2ef334d02d2b0a5efb2779"
+    sha256 cellar: :any_skip_relocation, ventura:      "3daaf224144591a08c424a85e69ff353c7f9f4b7764eb5190ccc0cce7446c2d5"
+    sha256 cellar: :any_skip_relocation, x86_64_linux: "ce37288c4b8219627ab9e0e010ae84467c5a3401b35cbc00e484d03c84be321e"
   end
 
   depends_on "go" => :build
