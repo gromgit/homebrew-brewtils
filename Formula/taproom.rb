@@ -1,8 +1,8 @@
 class Taproom < Formula
   desc "Interactive TUI for Homebrew"
   homepage "https://github.com/hzqtc/taproom"
-  url "https://github.com/hzqtc/taproom/archive/refs/tags/v0.2.0.tar.gz"
-  sha256 "b64693641a4b3ad49f21a0177cfbdb04a636811bd72f85c59e380e7385dd62ea"
+  url "https://github.com/hzqtc/taproom/archive/refs/tags/v0.2.3.tar.gz"
+  sha256 "a1dba31ea80be49666bcf271cbc5e94581f537f0ca33586cf92378acbdd27e31"
   license "MIT"
 
   bottle do
@@ -22,13 +22,13 @@ class Taproom < Formula
     input, = Open3.popen2 "script -q output.txt"
     input.puts "stty rows 80 cols 130"
     input.puts "export TERM=vt100"
-    input.puts bin/"taproom"
+    input.puts "#{bin}/taproom --hide-columns Size"
     sleep 15
     input.puts "q"
     sleep 1
     input.close
     sleep 2
 
-    assert_match "Formulae analytics loaded", (testpath/"output.txt").read
+    assert_match "Loading Formulae analytics", (testpath/"output.txt").read
   end
 end
