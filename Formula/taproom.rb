@@ -1,8 +1,8 @@
 class Taproom < Formula
   desc "Interactive TUI for Homebrew"
   homepage "https://github.com/hzqtc/taproom"
-  url "https://github.com/hzqtc/taproom/archive/refs/tags/v0.2.7.tar.gz"
-  sha256 "15605f308ce9a5777053f3c1161fe077e9097553bb1d0d2e1b80264c03d3a6c2"
+  url "https://github.com/hzqtc/taproom/archive/refs/tags/v0.3.0.tar.gz"
+  sha256 "e272fa779c16303159068102840dc993af226f7d1c6b1ddd7b978a71ec2bf77e"
   license "MIT"
 
   bottle do
@@ -20,16 +20,24 @@ class Taproom < Formula
   end
 
   test do
-    input, = Open3.popen2 "script -q output.txt"
-    input.puts "stty rows 80 cols 130"
-    input.puts "export TERM=vt100"
-    input.puts "#{bin}/taproom --hide-columns Size"
-    sleep 15
-    input.puts "q"
-    sleep 1
-    input.close
-    sleep 2
+    require "pty"
+    require "expect"
+    require "io/console"
+    timeout = 30
 
-    assert_match "Loading Formulae analytics", (testpath/"output.txt").read
+    PTY.spawn("#{bin}/taproom --hide-columns Size") do |r, w, pid|
+      r.winsize = [80, 130]
+      begin
+        refute_nil r.expect("Loading all Casks", timeout), "Expected cask loading message"
+        w.write "q"
+        r.read
+      rescue Errno::EIO
+        # GNU/Linux raises EIO when read is done on closed pty
+      ensure
+        r.close
+        w.close
+        Process.wait(pid)
+      end
+    end
   end
 end
