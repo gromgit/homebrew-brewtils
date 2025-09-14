@@ -1,8 +1,8 @@
 class Taproom < Formula
   desc "Interactive TUI for Homebrew"
   homepage "https://github.com/hzqtc/taproom"
-  url "https://github.com/hzqtc/taproom/archive/refs/tags/v0.3.1.tar.gz"
-  sha256 "d8f94fd8f6fcf31a5890e4ee39650ac9a954cde55e4508ec798d4e65d088eb83"
+  url "https://github.com/hzqtc/taproom/archive/refs/tags/v0.4.2.tar.gz"
+  sha256 "aff268a186b7a7602808d502b4a0d67306923ad65dd94300420551eb3432de4c"
   license "MIT"
 
   bottle do
@@ -28,7 +28,7 @@ class Taproom < Formula
     PTY.spawn("#{bin}/taproom --hide-columns Size") do |r, w, pid|
       r.winsize = [80, 130]
       begin
-        refute_nil r.expect("Loading all Casks", timeout), "Expected cask loading message"
+        refute_nil r.expect("Formulae available", timeout), "Expected available formulae message"
         w.write "q"
         r.read
       rescue Errno::EIO
