@@ -1,8 +1,8 @@
 class Taproom < Formula
   desc "Interactive TUI for Homebrew"
   homepage "https://github.com/hzqtc/taproom"
-  url "https://github.com/hzqtc/taproom/archive/refs/tags/v0.3.1.tar.gz"
-  sha256 "d8f94fd8f6fcf31a5890e4ee39650ac9a954cde55e4508ec798d4e65d088eb83"
+  url "https://github.com/hzqtc/taproom/archive/refs/tags/v0.4.4.tar.gz"
+  sha256 "5ed8a0c9b8feb851c727bf4e0c2e6a4b332df12f11014443d3d462b98f5478fc"
   license "MIT"
 
   bottle do
