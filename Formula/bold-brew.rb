@@ -1,8 +1,8 @@
 class BoldBrew < Formula
   desc "Homebrew TUI manager"
   homepage "https://bold-brew.com"
-  url "https://github.com/Valkyrie00/bold-brew/archive/refs/tags/v1.8.0.tar.gz"
-  sha256 "de2e98fd8a961222eb4e0b28fbc05e5c8f322c4cc34d3919407cafbe863af772"
+  url "https://github.com/Valkyrie00/bold-brew/archive/refs/tags/v2.0.0.tar.gz"
+  sha256 "13b4ed2117beca0232afdc14bb7d15468fa0773c08aeea97d7aa2810389bb395"
   license "MIT"
 
   bottle do
@@ -28,7 +28,7 @@ class BoldBrew < Formula
     input.puts "stty rows 80 cols 130"
     input.puts "export TERM=vt100"
     input.puts bin/"bbrew"
-    sleep 5
+    sleep 10
     input.puts "q"
     sleep 1
     input.close
