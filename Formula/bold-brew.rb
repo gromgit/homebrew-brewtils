@@ -1,8 +1,8 @@
 class BoldBrew < Formula
   desc "Homebrew TUI manager"
   homepage "https://bold-brew.com"
-  url "https://github.com/Valkyrie00/bold-brew/archive/refs/tags/v2.0.0.tar.gz"
-  sha256 "13b4ed2117beca0232afdc14bb7d15468fa0773c08aeea97d7aa2810389bb395"
+  url "https://github.com/Valkyrie00/bold-brew/archive/refs/tags/v2.1.1.tar.gz"
+  sha256 "4416f2fd52909324fb59a1d09860d749dcb8b232abdf267a66a4f9f26f3a2645"
   license "MIT"
 
   bottle do
@@ -24,16 +24,20 @@ class BoldBrew < Formula
   end
 
   test do
-    input, = Open3.popen2 "script -q output.txt"
-    input.puts "stty rows 80 cols 130"
-    input.puts "export TERM=vt100"
-    input.puts bin/"bbrew"
-    sleep 10
-    input.puts "q"
-    sleep 1
-    input.close
-    sleep 2
+    require "pty"
+    require "io/console"
 
-    assert_match "Bold Brew #{version}", (testpath/"output.txt").read
+    PTY.spawn({ "TERM" => "vt100" }, bin/"bbrew") do |r, w, pid|
+      r.winsize = [80, 43]
+      sleep 30
+      w.write "q"
+      assert_match("Bold Brew #{version}", r.read)
+    rescue Errno::EIO
+      # GNU/Linux raises EIO when read is done on closed pty
+    ensure
+      r.close
+      w.close
+      Process.wait pid
+    end
   end
 end
