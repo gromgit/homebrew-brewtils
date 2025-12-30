@@ -7,10 +7,10 @@ class BoldBrew < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/gromgit/brewtils"
-    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "bf6046c9334fed0efcd6af0e7ec38b9fc5fb4f739b56642c67f4e62615e2261a"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "251280535f8b5586d80812b0f5e8e6ad7ad55dbac2cf8b82e6e3ead1efadda87"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "62905f04c0ae626901b19fb8af4e7be5e7a6e606d4aa17a1102a3aa637f60885"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "dcc7ae04c97a7401a957b56bf95e7291b281a718bebeb501d4ad85d4e8c0eb68"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "1e086447a08e08680c047a2f27ba50aba4cf6f1fb8e9bfa9a50a555ecb9c68e2"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "1d87944a45993bdabd45af6b8f9d22fe496543c94225cc47be91223985cde126"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "6f1ba6add28f012bac4614870417f49db11dd256509085a5bd455a2f666e5319"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "3ab88818604a7209dfcb0ace1c657589e9cc3d115ea66fc9d89462022199ad11"
   end
 
   depends_on "go" => :build
