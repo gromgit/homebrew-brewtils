@@ -1,8 +1,8 @@
 class BoldBrew < Formula
   desc "Homebrew TUI manager"
   homepage "https://bold-brew.com"
-  url "https://github.com/Valkyrie00/bold-brew/archive/refs/tags/v2.2.0.tar.gz"
-  sha256 "6897d9eefd4355cb8160379138b7b96fbac9d647a51f3c43427fc3904e9b2dda"
+  url "https://github.com/Valkyrie00/bold-brew/archive/refs/tags/v2.2.1.tar.gz"
+  sha256 "ec424e255ee90cdb2ee425f08898fba8587b145d8398f96cba63eec7b21f40ed"
   license "MIT"
 
   bottle do
