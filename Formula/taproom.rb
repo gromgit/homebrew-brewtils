@@ -7,10 +7,10 @@ class Taproom < Formula
 
   bottle do
     root_url "https://ghcr.io/v2/gromgit/brewtils"
-    sha256 cellar: :any_skip_relocation, arm64_sequoia: "5d89d721c4a4d86ca331a67c1585cf46237b1937e7561bd506ea8259c8e9d50f"
-    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "448b9ef4f2ee03856b9430ae84162a2d5eb4b938f6a8b84497cba4657824fe96"
-    sha256 cellar: :any_skip_relocation, ventura:       "7f2938164f0b702b49f7b522e535aa38c5661c4cdd7ebe3e211899bdc2a33640"
-    sha256 cellar: :any_skip_relocation, x86_64_linux:  "1d78637eb11dc2366586096b800a3ae26574e432f478445781dfb7ef4d6a54d3"
+    sha256 cellar: :any_skip_relocation, arm64_tahoe:   "29aff9222d247e27b682506eebb158833c5545dd6d0fb36bbc4b7c56e6282704"
+    sha256 cellar: :any_skip_relocation, arm64_sequoia: "1105a1315df4a53d2cd81059096f81ae8f35e748b14c8921e84c918eef19f958"
+    sha256 cellar: :any_skip_relocation, arm64_sonoma:  "181b8e3be4289ea96a0d1c40f7cde7d0e4f9dffa52269b531e9305613bfa3eff"
+    sha256 cellar: :any_skip_relocation, x86_64_linux:  "1f4a3452024c6cf6be13f661376751d5f142c158318f1bbfb14f36903f6d6ed1"
   end
 
   depends_on "go" => :build
